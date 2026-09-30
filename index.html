@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- SEO Meta Tags -->
+  <title>王小明 Ming Wang | 資訊工程畢業生 • 軟體工程與全端開發</title>
+  <meta name="description" content="王小明 (Ming Wang) 的個人介紹與作品集網頁。國立大學資訊工程學系應屆畢業生，專注於現代 Web 全端開發、React、TypeScript 與優雅互動體驗。">
+  <meta name="keywords" content="王小明, Ming Wang, 軟體工程師, 前端開發, 全端開發, 資訊工程, 作品集, 求職, React, TypeScript">
+  <meta name="author" content="王小明 Ming Wang">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="王小明 Ming Wang | 軟體工程與全端開發個人簡介">
+  <meta property="og:description" content="把好想法化作流暢絲滑的數位體驗。歡迎探索我的技術棧、作品集與學習歷程。">
+  <meta property="og:image" content="assets/images/avatar.jpg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Glowing Orbs -->
+  <div class="bg-ambient" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <nav class="nav-container" aria-label="主要導覽">
+      <a href="#top" class="brand-logo" title="返回頂部">
+        <span class="brand-dot"></span>
+        <span class="brand-text">Ming Wang<span style="color: var(--accent-primary);">.dev</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#about" class="nav-link">關於我</a></li>
+        <li><a href="#skills" class="nav-link">專業技術</a></li>
+        <li><a href="#projects" class="nav-link">代表作品</a></li>
+        <li><a href="#timeline" class="nav-link">歷程里程碑</a></li>
+        <li><a href="#contact" class="nav-link">聯絡交流</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button id="theme-toggle-btn" class="btn-icon" aria-label="切換深淺色外觀" title="切換深淺色外觀">
+          <!-- Sun Icon -->
+          <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <!-- Moon Icon -->
+          <svg id="theme-icon-moon" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Download CV Action -->
+        <a href="#contact" class="btn-primary js-download-cv">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>下載履歷 PDF</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Bento Grid Section -->
+  <main class="main-content" id="top">
+    <div class="bento-grid">
+
+      <!-- ================= 1. HERO CARD (7 Cols) ================= -->
+      <section class="bento-card card-hero" id="about" aria-labelledby="hero-title">
+        <div class="card-inner">
+          <div class="hero-layout">
+            <div class="avatar-wrapper">
+              <div class="avatar-glow"></div>
+              <img src="assets/images/avatar.jpg" alt="王小明 Ming Wang 個人肖像" class="avatar-img" width="170" height="170">
+            </div>
+
+            <div class="hero-info">
+              <!-- Seeking Opportunity Status Badge -->
+              <div class="status-badge">
+                <span class="status-dot-pulse"></span>
+                <span>積極求職中 • 開放 2025 全職 / 實習</span>
+              </div>
+
+              <div class="hero-name-group">
+                <h1 class="hero-name" id="hero-title">王小明 Ming Wang</h1>
+                <div class="hero-title-role">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                  <span>資訊工程系 • 軟體工程與全端開發者</span>
+                </div>
+              </div>
+
+              <!-- Dynamic Typewriter Tagline -->
+              <div class="typewriter-container">
+                <span class="typewriter-text" id="typewriter"></span>
+              </div>
+
+              <!-- Hero CTAs -->
+              <div class="hero-buttons">
+                <a href="#contact" class="btn-primary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span>與我聯繫</span>
+                </a>
+                <a href="#projects" class="btn-secondary">
+                  <span>瀏覽作品集</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. SKILLS CARD (5 Cols) ================= -->
+      <section class="bento-card card-skills" id="skills" aria-labelledby="skills-title">
+        <div class="card-inner">
+          <div class="card-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>TECH STACK / 專業技能</span>
+          </div>
+          <h2 class="card-title" id="skills-title">技術棧與掌握工具</h2>
+          <p class="card-description">紮實的資工核心理論與熱忱的現代 Web 全端架構實踐。</p>
+
+          <div class="skills-categories">
+            <!-- Frontend Stack -->
+            <div>
+              <div class="skill-category-title">
+                <span>⚡ Frontend 開發</span>
+              </div>
+              <div class="skill-tags-group">
+                <span class="skill-pill"><span class="skill-dot react"></span>React 18</span>
+                <span class="skill-pill"><span class="skill-dot ts"></span>TypeScript</span>
+                <span class="skill-pill"><span class="skill-dot next"></span>Next.js</span>
+                <span class="skill-pill"><span class="skill-dot css"></span>Tailwind / CSS3</span>
+                <span class="skill-pill"><span class="skill-dot react"></span>Vue.js</span>
+              </div>
+            </div>
+
+            <!-- Backend & Data Stack -->
+            <div>
+              <div class="skill-category-title">
+                <span>🛠️ Backend & Database</span>
+              </div>
+              <div class="skill-tags-group">
+                <span class="skill-pill"><span class="skill-dot node"></span>Node.js</span>
+                <span class="skill-pill"><span class="skill-dot python"></span>Python</span>
+                <span class="skill-pill"><span class="skill-dot ts"></span>Express / REST API</span>
+                <span class="skill-pill"><span class="skill-dot ts"></span>PostgreSQL / SQLite</span>
+              </div>
+            </div>
+
+            <!-- Workflow & Tools -->
+            <div>
+              <div class="skill-category-title">
+                <span>🚀 研發協作與工具</span>
+              </div>
+              <div class="skill-tags-group">
+                <span class="skill-pill"><span class="skill-dot git"></span>Git / GitHub Flow</span>
+                <span class="skill-pill"><span class="skill-dot ts"></span>Docker (Container)</span>
+                <span class="skill-pill"><span class="skill-dot figma"></span>Figma UI Design</span>
+                <span class="skill-pill"><span class="skill-dot ts"></span>Linux / Shell</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. FEATURED PROJECT CARD (8 Cols) ================= -->
+      <section class="bento-card card-project" id="projects" aria-labelledby="project-title">
+        <div class="card-inner">
+          <div class="card-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>FEATURED PROJECT / 代表作品</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+            <h2 class="card-title" id="project-title">DevPulse - 智慧開發者專案監控儀表板</h2>
+            <span style="font-size: 0.8rem; color: var(--accent-emerald); font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:currentColor;"></span> 已部署上線
+            </span>
+          </div>
+          <p class="card-description">
+            專為分散式團隊設計的一站式研發工作台，整合即時系統負載監測、API 效能熱力圖與自訂自動化工作流程，具備超低延遲 WebSocket 雙向即時通訊。
+          </p>
+
+          <div class="project-preview-box">
+            <img src="assets/images/project1.jpg" alt="DevPulse 系統儀表板預覽" class="project-img" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-quick-info">
+                <div class="project-tags">
+                  <span class="project-tag">React 18</span>
+                  <span class="project-tag">TypeScript</span>
+                  <span class="project-tag">WebSocket</span>
+                  <span class="project-tag">Chart.js</span>
+                  <span class="project-tag">Node.js</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-actions">
+            <button class="btn-open-modal js-open-modal" aria-label="查看 DevPulse 專案架構詳情">
+              <span>查看架構細節</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="11" y1="8" x2="11" y2="14"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+            </button>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn-secondary" title="前往 GitHub 專案庫">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+            <a href="#" class="btn-secondary js-open-modal" title="線上 Demo 演示">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              <span>即時預覽</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. TIMELINE CARD (4 Cols) ================= -->
+      <section class="bento-card card-timeline" id="timeline" aria-labelledby="timeline-title">
+        <div class="card-inner">
+          <div class="card-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>TIMELINE / 歷程里程碑</span>
+          </div>
+          <h2 class="card-title" id="timeline-title">求學與實踐歷程</h2>
+
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-date">2024.11</div>
+              <div class="timeline-role">全國大專軟體創新競賽 • 優勝獎</div>
+              <p class="timeline-desc">帶領 3 人團隊開發跨平台協作工具，負責全端核心架構。</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-date">2023.07 - 2023.09</div>
+              <div class="timeline-role">科技公司 Web 前端開發實習生</div>
+              <p class="timeline-desc">參與企業級 SaaS 產品前端元件庫重構，提升首頁載入速度達 35%。</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-date">2021 - 2025</div>
+              <div class="timeline-role">國立大學 資訊工程學系 學士</div>
+              <p class="timeline-desc">累積 GPA 3.82 / 4.0，專精資料結構、演算法、網路與軟體工程。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. VALUES & WORK STYLE (4 Cols) ================= -->
+      <section class="bento-card card-values" aria-labelledby="values-title">
+        <div class="card-inner">
+          <div class="card-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span>VALUES / 工作風格與特質</span>
+          </div>
+          <h2 class="card-title" id="values-title">核心特質與開發理念</h2>
+
+          <div class="values-grid">
+            <div class="value-item">
+              <div class="value-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
+              <div>
+                <div class="value-title">重視細節與 Clean Code</div>
+                <div class="value-sub">維持程式碼可讀性、重構習慣與清晰文件架構。</div>
+              </div>
+            </div>
+
+            <div class="value-item">
+              <div class="value-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <div>
+                <div class="value-title">高效敏捷的自學能力</div>
+                <div class="value-sub">積極擁抱現代技術與 AI 輔助工作流，迅速實踐轉化。</div>
+              </div>
+            </div>
+
+            <div class="value-item">
+              <div class="value-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="value-title">跨領域溝通與同理心</div>
+                <div class="value-sub">善於傾聽設計師與產品團隊，追求卓越的使用者體驗。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. CONTACT & SOCIALS CARD (4 Cols) ================= -->
+      <section class="bento-card card-contact" id="contact" aria-labelledby="contact-title">
+        <div class="card-inner">
+          <div class="card-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <span>GET IN TOUCH / 聯絡方式</span>
+          </div>
+          <h2 class="card-title" id="contact-title">歡迎交流與職缺邀約</h2>
+          <p class="card-description">正在尋求前端、後端或全端軟體工程師機會。點擊下方一鍵複製信箱：</p>
+
+          <!-- Interactive Click-to-Copy Box -->
+          <div class="contact-email-box" id="copy-email-box" title="點擊一鍵複製 Email">
+            <span class="email-address" id="email-text">ming.wang.dev@gmail.com</span>
+            <button class="email-copy-btn" id="copy-email-btn" type="button" aria-label="複製電子郵件地址">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>複製</span>
+            </button>
+          </div>
+
+          <!-- Social Links Matrix -->
+          <div class="social-links-grid">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="GitHub Profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="LinkedIn Profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+              <span>LinkedIn</span>
+            </a>
+
+            <a href="https://cakeresume.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="CakeResume 履歷">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span>Resume</span>
+            </a>
+
+            <a href="mailto:ming.wang.dev@gmail.com" class="social-btn" title="直接寄信">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13"></path>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              <span>Email</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. QUOTE & VISION CARD (4 Cols) ================= -->
+      <section class="bento-card card-quote" aria-labelledby="quote-title">
+        <div class="card-inner">
+          <div class="card-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+              <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+            </svg>
+            <span>PHILOSOPHY / 座右銘</span>
+          </div>
+          <h2 class="card-title" id="quote-title">持續迭代與成長</h2>
+
+          <div class="quote-content">
+            「好的軟體不單是能運作的代碼，更是以人為本、解決真實痛點並帶來愉悅的體驗。」
+          </div>
+
+          <div class="quote-footer">
+            <span class="brand-dot"></span>
+            <div class="quote-author">王小明 • 保持對技術的熱忱與好奇心</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Interactive Project Detail Modal -->
+  <div class="modal-overlay" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="modal-close" aria-label="關閉彈窗">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <img src="assets/images/project1.jpg" alt="DevPulse 系統詳細架構預覽" class="modal-header-img">
+      
+      <h3 class="modal-title" id="modal-title">DevPulse - 開發者智能監控工作台</h3>
+
+      <div class="modal-tech-stack">
+        <span class="skill-pill"><span class="skill-dot react"></span>React 18</span>
+        <span class="skill-pill"><span class="skill-dot ts"></span>TypeScript</span>
+        <span class="skill-pill"><span class="skill-dot node"></span>Node.js WebSocket</span>
+        <span class="skill-pill"><span class="skill-dot ts"></span>Chart.js 視覺化</span>
+        <span class="skill-pill"><span class="skill-dot css"></span>TailwindCSS</span>
+      </div>
+
+      <div class="modal-body">
+        <p>DevPulse 是一個針對現代分散式團隊設計的即時監控儀表板。它解決了團隊需要跨多個服務查看日誌、延遲與伺服器健康度的痛點，提供流暢的單一視圖。</p>
+
+        <h4 class="modal-section-title">✨ 核心架構亮點</h4>
+        <ul class="modal-list">
+          <li><strong>雙向低延遲通訊：</strong>使用 WebSocket 實現伺服器事件推送，延遲低於 50ms，支援百萬級假資料流式渲染。</li>
+          <li><strong>模組化儀表板：</strong>基於 React 18 與自訂 Hook 設計元件化可拖曳卡片，記憶使用者自訂版面。</li>
+          <li><strong>高效渲染優化：</strong>引入虛擬列表（Virtual Scrolling）與 Web Worker 運算，確保在高速高頻圖表更新下幀率維持 60 FPS。</li>
+        </ul>
+
+        <h4 class="modal-section-title">💡 學習與突破</h4>
+        <p>在開發本專案的過程中，我深入實踐了 TypeScript 嚴格型別定義、狀態管理策略以及瀏覽器端高負載資料的效能優化技巧，建立了從架構設計到部署落地的完整全端經驗。</p>
+      </div>
+
+      <div class="modal-actions">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span>查看 GitHub 原始碼</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-notification" class="toast-notification" role="status" aria-live="polite"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div>&copy; 2025 王小明 Ming Wang. All rights reserved.</div>
+    <div class="footer-credit">精心打造自響應 Apple-Style Bento Grid • 乾淨現代美學與流暢體驗</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
