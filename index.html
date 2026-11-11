@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>永源化工 — 自動配櫃與最佳化計價系統 (RWD Web 版)</title>
+  <!-- Bootstrap 5.3 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+  <!-- 自訂 RWD 工業風樣式 -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- =====================================================================
+       頂部導覽列 (Navbar)
+       ===================================================================== -->
+  <nav class="navbar navbar-dark yy-navbar sticky-top px-3 py-2">
+    <div class="container-fluid">
+      <div class="d-flex align-items-center gap-2">
+        <!-- 行動裝置開啟側邊欄按鈕 (< 992px 顯示) -->
+        <button
+          class="btn btn-outline-light btn-sm d-lg-none"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebarOffcanvas"
+          aria-controls="sidebarOffcanvas"
+          title="開啟資料來源與設定檔管理"
+        >
+          <i class="bi bi-sliders"></i> 資料與設定檔
+        </button>
+        <a class="navbar-brand fw-bold mb-0 d-flex align-items-center gap-2" href="#">
+          <span class="fs-4">📦</span>
+          <span>永源化工 — 自動配櫃與最佳化計價系統</span>
+        </a>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-2 text-light small">
+        <span class="badge bg-info text-dark fw-semibold">配滿櫃模式 (20T ~ 20.5T)</span>
+        <span class="badge bg-warning text-dark fw-semibold">USD / JPY 雙幣別計價</span>
+        <span class="badge bg-light text-dark fw-semibold">A ~ E 客戶模型</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+       主版面容器 (Bootstrap 5 響應式網格)
+       ===================================================================== -->
+  <div class="container-fluid mt-3 px-3 px-lg-4">
+    <div class="row g-3">
+      <!-- =================================================================
+           左側邊欄：庫存明細表來源與 JSON 設定檔存取 (桌機固定側欄 / 行動端 Offcanvas)
+           ================================================================= -->
+      <div class="col-lg-3 col-xl-3">
+        <div
+          class="offcanvas-lg offcanvas-start yy-sidebar-col"
+          tabindex="-1"
+          id="sidebarOffcanvas"
+          aria-labelledby="sidebarOffcanvasLabel"
+        >
+          <div class="offcanvas-header border-bottom d-lg-none">
+            <h5 class="offcanvas-title fw-bold" id="sidebarOffcanvasLabel">
+              🗂️ 資料來源與設定檔管理
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              data-bs-target="#sidebarOffcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="offcanvas-body d-block p-3 p-lg-0">
+            <div class="yy-card p-3 mb-3">
+              <h6 class="fw-bold mb-3 d-none d-lg-block">🗂️ 資料來源與設定檔管理</h6>
+
+              <!-- 1. 庫存明細表 (.xlsx) -->
+              <div class="mb-3">
+                <label class="form-label fw-bold text-primary">1. 庫存明細表 (.xlsx)</label>
+                <div class="form-check mb-1">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="invSourceMode"
+                    id="invSourceDefault"
+                    value="default"
+                    checked
+                  />
+                  <label class="form-check-label small" for="invSourceDefault">
+                    使用預設《庫存明細表.xlsx》
+                  </label>
+                </div>
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="invSourceMode"
+                    id="invSourceUpload"
+                    value="upload"
+                  />
+                  <label class="form-check-label small" for="invSourceUpload">
+                    上傳自訂庫存 Excel 檔
+                  </label>
+                </div>
+
+                <div id="invUploadWrapper" class="mt-2 d-none">
+                  <input
+                    class="form-control form-control-sm"
+                    type="file"
+                    id="invFileInput"
+                    accept=".xlsx,.xls"
+                  />
+                  <div class="form-text">支援 .xlsx / .xls，於瀏覽器本地安全解析</div>
+                </div>
+              </div>
+
+              <!-- 庫存載入統計卡片 -->
+              <div id="invStatusCard" class="alert alert-success py-2 px-3 small mb-3">
+                載入庫存資料中...
+              </div>
+
+              <hr class="my-3" />
+
+              <!-- 2. JSON 參數設定檔匯入 / 匯出 -->
+              <div class="mb-2">
+                <label class="form-label fw-bold text-primary">
+                  2. JSON 參數設定檔匯入 / 匯出
+                </label>
+                <div class="mb-2">
+                  <label for="jsonFileInput" class="form-label small text-muted mb-1">
+                    匯入外部 JSON 設定檔 (.json)
+                  </label>
+                  <input
+                    class="form-control form-control-sm"
+                    type="file"
+                    id="jsonFileInput"
+                    accept=".json"
+                  />
+                </div>
+
+                <div class="d-grid gap-2 mt-3">
+                  <button
+                    type="button"
+                    id="btnDownloadSidebarJson"
+                    class="btn btn-outline-primary btn-sm fw-semibold"
+                  >
+                    <i class="bi bi-download me-1"></i> 下載目前 UI 參數 (.json)
+                  </button>
+                  <button
+                    type="button"
+                    id="btnSaveBrowserDefault"
+                    class="btn btn-outline-success btn-sm fw-semibold"
+                  >
+                    <i class="bi bi-floppy me-1"></i> 儲存為預設設定 (瀏覽器記憶)
+                  </button>
+                  <button
+                    type="button"
+                    id="btnResetFactoryDefault"
+                    class="btn btn-outline-secondary btn-sm"
+                  >
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> 還原出廠預設 JSON
+                  </button>
+                </div>
+
+                <div id="sidebarToastMsg" class="mt-2 small"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================
+           右側主工作區
+           ================================================================= -->
+      <div class="col-12 col-lg-9 col-xl-9">
+        <!-- 快速套用實務範例範本列 -->
+        <div class="yy-card p-3 mb-3">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0">
+              ⚡ 快速套用實務範例範本
+              <span class="text-muted fw-normal small">
+                （點擊後自動帶入參數並試算，亦可於下方自由微調）
+              </span>
+            </h6>
+          </div>
+
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-2 mb-2">
+            <div class="col">
+              <button type="button" id="btnPreset1" class="w-100 preset-btn active">
+                <span class="preset-title">📌 範例一：E 客戶配櫃 (USD)</span>
+                <span class="preset-sub">必出 1F1+3P1 / 銅&ge;5% / 排除X料算PM</span>
+              </button>
+            </div>
+            <div class="col">
+              <button type="button" id="btnPreset2" class="w-100 preset-btn">
+                <span class="preset-title">📌 範例二：A 客戶配櫃 (JPY ¥)</span>
+                <span class="preset-sub">日圓計價 / 乾基DMT門檻回收率</span>
+              </button>
+            </div>
+            <div class="col">
+              <button type="button" id="btnPreset3" class="w-100 preset-btn">
+                <span class="preset-title">📌 範例三：B 客戶配櫃 (USD)</span>
+                <span class="preset-sub">禁收編碼 B / 同櫃銅落差 &le; 7.0%</span>
+              </button>
+            </div>
+            <div class="col">
+              <button type="button" id="btnPresetDefault" class="w-100 preset-btn">
+                <span class="preset-title">🔄 回復全域預設參數</span>
+                <span class="preset-sub">清空必出與禁收限制 (B 客戶預設)</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="activePresetBanner"
+            class="alert alert-info py-2 px-3 mb-0 small d-flex align-items-center gap-2"
+          >
+            <i class="bi bi-lightbulb-fill text-primary"></i>
+            <div>
+              <strong>目前載入之範本狀態：</strong>
+              <span id="activePresetText">實務範例一：E 客戶配櫃 (預設載入，USD 計價)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             參數設定五大分頁區 (Tabs 1 ~ 5)
+             =============================================================== -->
+        <div class="yy-card mb-3">
+          <ul class="nav nav-tabs yy-nav-tabs px-2 pt-2" id="configTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link active"
+                id="tab-cond-btn"
+                data-bs-toggle="tab"
+                data-bs-target="#tab-cond"
+                type="button"
+                role="tab"
+              >
+                ⚙️ 1. 配櫃方式與料號篩選
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab-price-btn"
+                data-bs-toggle="tab"
+                data-bs-target="#tab-price"
+                type="button"
+                role="tab"
+              >
+                💰 2. 金屬市場價格 (USD / JPY)
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab-cust-a-btn"
+                data-bs-toggle="tab"
+                data-bs-target="#tab-cust-a"
+                type="button"
+                role="tab"
+              >
+                🏭 3. A 客戶專屬參數 (乾基DMT)
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab-cust-bcde-btn"
+                data-bs-toggle="tab"
+                data-bs-target="#tab-cust-bcde"
+                type="button"
+                role="tab"
+              >
+                📊 4. B~E 客戶與階梯折數表
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab-inv-view-btn"
+                data-bs-toggle="tab"
+                data-bs-target="#tab-inv-view"
+                type="button"
+                role="tab"
+              >
+                📋 5. 庫存明細表總覽 (106批)
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content p-3" id="configTabsContent">
+            <!-- ===========================================================
+                 Tab 1: 配櫃方式、計價幣別、重量區間、品位落差與必出/禁收料號篩選
+                 =========================================================== -->
+            <div class="tab-pane fade show active" id="tab-cond" role="tabpanel">
+              <div class="row g-3">
+                <!-- Col 1: 客戶類型、幣別、配滿櫃重量 -->
+                <div class="col-12 col-md-6 col-xl-4">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50 h-100">
+                    <h6 class="fw-bold text-primary mb-3">
+                      🎯 客戶類型、計價幣別與配滿櫃重量
+                    </h6>
+
+                    <div class="mb-2">
+                      <label for="selectCustomerType" class="form-label">
+                        選擇客戶計價邏輯 (<code>customer_type</code>)
+                      </label>
+                      <select id="selectCustomerType" class="form-select form-select-sm">
+                        <option value="A">A 客戶 — 乾基 DMT 門檻回收率計價</option>
+                        <option value="B">B 客戶 — 濕基 WMT 階梯折數 (含運費/扣減)</option>
+                        <option value="C">C 客戶 — 濕基 WMT 階梯折數計價</option>
+                        <option value="D">D 客戶 — 濕基 WMT 階梯折數計價</option>
+                        <option value="E">E 客戶 — 濕基階梯折數 (支援貴金屬排除特定料號)</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-2">
+                      <label for="selectPriceCurrency" class="form-label">
+                        選擇計價幣別 (<code>price_currency</code>)
+                      </label>
+                      <select id="selectPriceCurrency" class="form-select form-select-sm">
+                        <option value="USD">💵 USD 美元計價 (Cu: USD/kg, Au/Ag/Pd: USD/oz)</option>
+                        <option value="JPY">💴 JPY 日圓計價 (Cu: ¥/T, Au/Ag/Pd: ¥/g)</option>
+                      </select>
+                    </div>
+
+                    <div class="small fw-semibold text-success my-2">
+                      ✅ 配櫃方式：固定採用「配滿櫃模式 (<code>fill_container = True</code>)」
+                    </div>
+
+                    <div class="row g-2 mb-2">
+                      <div class="col-6">
+                        <label for="inputFullMinKg" class="form-label">配滿櫃濕重下限 (kg)</label>
+                        <input
+                          type="number"
+                          id="inputFullMinKg"
+                          class="form-control form-control-sm"
+                          min="1000"
+                          max="50000"
+                          step="100"
+                          value="20000"
+                        />
+                      </div>
+                      <div class="col-6">
+                        <label for="inputFullMaxKg" class="form-label">配滿櫃濕重上限 (kg)</label>
+                        <input
+                          type="number"
+                          id="inputFullMaxKg"
+                          class="form-control form-control-sm"
+                          min="1000"
+                          max="50000"
+                          step="100"
+                          value="20500"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="mb-0">
+                      <label for="inputSplitBatchPenalty" class="form-label">
+                        拆批懲罰權重 (<code id="labelSplitPenaltyUnit">USD/拆批</code>)
+                      </label>
+                      <input
+                        type="number"
+                        id="inputSplitBatchPenalty"
+                        class="form-control form-control-sm"
+                        min="0"
+                        max="500000"
+                        step="100"
+                        value="500"
+                      />
+                      <div class="form-text">每拆開一批湊櫃時扣除之虛擬懲罰分數，優先鼓勵整批全出</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Col 2: 銅品位目標區間、同櫃落差與金額上限 -->
+                <div class="col-12 col-md-6 col-xl-4">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50 h-100">
+                    <h6 class="fw-bold text-primary mb-3">
+                      📏 銅品位目標區間、同櫃落差與金額上限
+                    </h6>
+
+                    <div class="row g-2 mb-3">
+                      <div class="col-6">
+                        <label for="inputTargetCuMin" class="form-label">目標濕基 Cu 下限 (%)</label>
+                        <input
+                          type="number"
+                          id="inputTargetCuMin"
+                          class="form-control form-control-sm"
+                          min="0"
+                          max="100"
+                          step="0.5"
+                          value="5.0"
+                        />
+                      </div>
+                      <div class="col-6">
+                        <label for="inputTargetCuMax" class="form-label">目標濕基 Cu 上限 (%)</label>
+                        <input
+                          type="number"
+                          id="inputTargetCuMax"
+                          class="form-control form-control-sm"
+                          min="0"
+                          max="100"
+                          step="0.5"
+                          value="100.0"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="inputMaxDiffCu" class="form-label">
+                        同櫃最大濕基銅落差上限 (<code>max_in_container_diff_cu</code>, %)
+                      </label>
+                      <input
+                        type="number"
+                        id="inputMaxDiffCu"
+                        class="form-control form-control-sm"
+                        min="0.1"
+                        max="100"
+                        step="0.5"
+                        value="100.0"
+                      />
+                      <div class="form-text">
+                        同櫃最高濕基銅批次與最低濕基銅批次之最大允許落差 (如 B 客戶設定 7.0%)
+                      </div>
+                    </div>
+
+                    <div class="form-check form-switch mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="checkEnableMaxTotalValue"
+                      />
+                      <label class="form-check-label small fw-semibold" for="checkEnableMaxTotalValue">
+                        啟用單櫃毛收入總金額上限 (<code>max_total_value</code>)
+                      </label>
+                    </div>
+
+                    <div id="maxTotalValueWrapper" class="d-none">
+                      <label for="inputMaxTotalValue" class="form-label">
+                        單櫃總金額上限 (<span id="labelMaxTotalValueUnit">USD</span>)
+                      </label>
+                      <input
+                        type="number"
+                        id="inputMaxTotalValue"
+                        class="form-control form-control-sm"
+                        min="1000"
+                        max="100000000"
+                        step="5000"
+                        value="200000"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Col 3: 禁收編碼與 E 客戶排除貴金屬料號 -->
+                <div class="col-12 col-xl-4">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50 h-100">
+                    <h6 class="fw-bold text-primary mb-2">
+                      🚫 禁收編碼與 ⚖️ E 客戶排除貴金屬料號
+                    </h6>
+
+                    <div class="mb-2">
+                      <label class="form-label">
+                        禁收編碼料號 (<code>banned_codes</code>，對應「編碼料號」)
+                      </label>
+                      <div id="pickerBannedCodes"></div>
+                    </div>
+
+                    <div class="mb-2">
+                      <label class="form-label">
+                        E 客戶貴金屬排除之總表料號 (<code>exclude_pm_materials</code>)
+                      </label>
+                      <div id="pickerExcludePmMaterials"></div>
+                    </div>
+
+                    <div class="mb-0">
+                      <label class="form-label">
+                        E 客戶貴金屬排除之編碼料號 (<code>exclude_pm_codes</code>)
+                      </label>
+                      <div id="pickerExcludePmCodes"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-3" />
+
+              <!-- 手動指定必出批次 / 進料代號 / 單包代號 -->
+              <h6 class="fw-bold text-primary mb-2">
+                📌 手動指定必出批次 / 進料代號 / 單包代號
+              </h6>
+              <div class="row g-3">
+                <div class="col-12 col-lg-5">
+                  <label class="form-label">
+                    指定必出批號 (<code>must_batch_ids</code>)
+                  </label>
+                  <div id="pickerMustBatchIds"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                  <label class="form-label">
+                    指定必出進料代號 (<code>must_feed_codes</code>)
+                  </label>
+                  <div id="pickerMustFeedCodes"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                  <label class="form-label">
+                    指定必出單包代號 (<code>must_bag_ids</code>)
+                  </label>
+                  <div id="pickerMustBagIds"></div>
+                </div>
+              </div>
+
+              <div
+                id="liveFilterStatsBar"
+                class="alert alert-secondary py-2 px-3 mt-3 mb-0 small"
+              >
+                📊 即時篩選統計計算中...
+              </div>
+            </div>
+
+            <!-- ===========================================================
+                 Tab 2: 金屬市場價格設定 (同時支援 JPY 日圓與 USD 美元)
+                 =========================================================== -->
+            <div class="tab-pane fade" id="tab-price" role="tabpanel">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                <h6 class="fw-bold mb-0">
+                  💰 國際金屬市場價格設定
+                </h6>
+                <span id="badgeActiveCurrencyTab2" class="badge bg-primary fs-6">
+                  目前生效計價幣別：USD
+                </span>
+              </div>
+
+              <!-- 1. 日圓計價 -->
+              <div class="p-3 border rounded-3 bg-light bg-opacity-50 mb-3">
+                <h6 class="fw-bold text-dark mb-3">
+                  💴 1. 日圓計價金屬市場價格 (<code>metal_prices_jpy</code> — 範例二 A 客戶預設採用)
+                </h6>
+                <div class="row g-3">
+                  <div class="col-6 col-md-3">
+                    <label for="inputPriceJpyCu" class="form-label">銅價 Cu (¥ / T)</label>
+                    <input
+                      type="number"
+                      id="inputPriceJpyCu"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="1000"
+                      value="1501000"
+                    />
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <label for="inputPriceJpyAu" class="form-label">金價 Au (¥ / g)</label>
+                    <input
+                      type="number"
+                      id="inputPriceJpyAu"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="10"
+                      value="13462"
+                    />
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <label for="inputPriceJpyAg" class="form-label">銀價 Ag (¥ / g)</label>
+                    <input
+                      type="number"
+                      id="inputPriceJpyAg"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="0.1"
+                      value="157.474"
+                    />
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <label for="inputPriceJpyPd" class="form-label">鈀價 Pd (¥ / g)</label>
+                    <input
+                      type="number"
+                      id="inputPriceJpyPd"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="10"
+                      value="5334"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. 美元計價 -->
+              <div class="p-3 border rounded-3 bg-light bg-opacity-50">
+                <h6 class="fw-bold text-dark mb-3">
+                  💵 2. 美元計價金屬市場價格 (<code>metal_prices</code> — 範例一 E 客戶、範例三 B 客戶預設採用)
+                </h6>
+                <div class="row g-3">
+                  <div class="col-6 col-md-4 col-lg">
+                    <label for="inputPriceUsdCu" class="form-label">銅價 Cu (USD / kg)</label>
+                    <input
+                      type="number"
+                      id="inputPriceUsdCu"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="0.1"
+                      value="9.5"
+                    />
+                  </div>
+                  <div class="col-6 col-md-4 col-lg">
+                    <label for="inputPriceUsdAu" class="form-label">金價 Au (USD / oz)</label>
+                    <input
+                      type="number"
+                      id="inputPriceUsdAu"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="10"
+                      value="2650"
+                    />
+                  </div>
+                  <div class="col-6 col-md-4 col-lg">
+                    <label for="inputPriceUsdAg" class="form-label">銀價 Ag (USD / oz)</label>
+                    <input
+                      type="number"
+                      id="inputPriceUsdAg"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="0.5"
+                      value="31.0"
+                    />
+                  </div>
+                  <div class="col-6 col-md-6 col-lg">
+                    <label for="inputPriceUsdPd" class="form-label">鈀價 Pd (USD / oz)</label>
+                    <input
+                      type="number"
+                      id="inputPriceUsdPd"
+                      class="form-control form-control-sm"
+                      min="0"
+                      step="10"
+                      value="1050"
+                    />
+                  </div>
+                  <div class="col-12 col-md-6 col-lg">
+                    <label for="inputTroyOzToG" class="form-label">金衡盎司換算 (g / oz)</label>
+                    <input
+                      type="number"
+                      id="inputTroyOzToG"
+                      class="form-control form-control-sm"
+                      min="1"
+                      step="0.0001"
+                      value="31.1035"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===========================================================
+                 Tab 3: A 客戶專屬計價參數 (乾基 DMT 門檻扣除法)
+                 =========================================================== -->
+            <div class="tab-pane fade" id="tab-cust-a" role="tabpanel">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                <h6 class="fw-bold mb-0">
+                  🏭 A 客戶計價模型參數（乾基 DMT 門檻回收率、RC 精煉費、運費與含水率超標扣款）
+                </h6>
+                <span id="badgeActiveCurrencyTab3" class="badge bg-primary">
+                  目前計價幣別：USD
+                </span>
+              </div>
+
+              <div class="mb-3 col-12 col-md-6">
+                <label for="selectAMode" class="form-label">A 客戶計價模式 (<code>a_mode</code>)</label>
+                <select id="selectAMode" class="form-select form-select-sm">
+                  <option value="with_pm">with_pm (銅 + 金銀鈀貴金屬一併計價)</option>
+                  <option value="cu_only">cu_only (僅計算銅，貴金屬不計價)</option>
+                </select>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-4">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50 h-100">
+                    <h6 class="fw-bold text-primary mb-3">1. 各金屬乾基起算門檻 (<code>a_thresholds</code>)</h6>
+                    <div class="mb-2">
+                      <label for="inputAThCu" class="form-label">Cu 乾基門檻 (%)</label>
+                      <input type="number" id="inputAThCu" class="form-control form-control-sm" min="0" step="0.1" value="3.0" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputAThAu" class="form-label">Au 乾基門檻 (g/T)</label>
+                      <input type="number" id="inputAThAu" class="form-control form-control-sm" min="0" step="0.5" value="1.0" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputAThAg" class="form-label">Ag 乾基門檻 (g/T)</label>
+                      <input type="number" id="inputAThAg" class="form-control form-control-sm" min="0" step="1.0" value="30.0" />
+                    </div>
+                    <div class="mb-0">
+                      <label for="inputAThPd" class="form-label">Pd 乾基門檻 (g/T)</label>
+                      <input type="number" id="inputAThPd" class="form-control form-control-sm" min="0" step="0.5" value="5.0" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50 h-100">
+                    <h6 class="fw-bold text-primary mb-3">2. 各金屬精煉費 RC (<code>a_rc</code>)</h6>
+                    <div class="mb-2">
+                      <label for="inputARcCu" class="form-label">Cu 精煉費 (<span id="labelARcCuUnit">USD / kg</span>)</label>
+                      <input type="number" id="inputARcCu" class="form-control form-control-sm" min="0" step="0.1" value="0.5" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputARcAu" class="form-label">Au 精煉費 (<span id="labelARcAuUnit">USD / oz</span>)</label>
+                      <input type="number" id="inputARcAu" class="form-control form-control-sm" min="0" step="0.5" value="5.0" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputARcAg" class="form-label">Ag 精煉費 (<span id="labelARcAgUnit">USD / oz</span>)</label>
+                      <input type="number" id="inputARcAg" class="form-control form-control-sm" min="0" step="0.1" value="0.5" />
+                    </div>
+                    <div class="mb-0">
+                      <label for="inputARcPd" class="form-label">Pd 精煉費 (<span id="labelARcPdUnit">USD / oz</span>)</label>
+                      <input type="number" id="inputARcPd" class="form-control form-control-sm" min="0" step="0.5" value="5.0" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50 h-100">
+                    <h6 class="fw-bold text-primary mb-3">3. 運費、水分超標與未達門檻罰款</h6>
+                    <div class="mb-2">
+                      <label for="inputAFreightPerDmt" class="form-label">
+                        乾基每噸運費 (<span id="labelAFreightUnit">USD/DMT</span>)
+                      </label>
+                      <input type="number" id="inputAFreightPerDmt" class="form-control form-control-sm" min="0" step="1.0" value="0.0" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputAMoistureLimit" class="form-label">含水率免扣款上限 (%)</label>
+                      <input type="number" id="inputAMoistureLimit" class="form-control form-control-sm" min="0" max="100" step="0.5" value="25.0" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputAMoisturePenaltyPerWmt" class="form-label">
+                        含水率超標每濕噸罰款 (<span id="labelAMoistPenUnit">USD/WMT</span>)
+                      </label>
+                      <input type="number" id="inputAMoisturePenaltyPerWmt" class="form-control form-control-sm" min="0" step="1.0" value="0.0" />
+                    </div>
+                    <div class="mb-2">
+                      <label for="inputACuBelowTcPerWmt" class="form-label">
+                        銅未達門檻每濕噸 TC 費 (<span id="labelACuTcUnit">USD/WMT</span>)
+                      </label>
+                      <input type="number" id="inputACuBelowTcPerWmt" class="form-control form-control-sm" min="0" step="1.0" value="0.0" />
+                    </div>
+                    <div class="mb-0">
+                      <label for="inputAAssayFeeIfBelow" class="form-label">
+                        化驗未達門檻追加費 (<span id="labelAAssayFeeUnit">USD</span>)
+                      </label>
+                      <input type="number" id="inputAAssayFeeIfBelow" class="form-control form-control-sm" min="0" step="10.0" value="0.0" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===========================================================
+                 Tab 4: B / C / D / E 客戶參數與互動式階梯折數表編輯器
+                 =========================================================== -->
+            <div class="tab-pane fade" id="tab-cust-bcde" role="tabpanel">
+              <h6 class="fw-bold mb-3">
+                📊 B / C / D / E 客戶濕基計價扣減與「階梯折數對照表 (<code>standard_tier_tables</code>)」編輯器
+              </h6>
+
+              <div class="row g-3 mb-3">
+                <div class="col-12 col-sm-6">
+                  <label for="inputBFreightPerKg" class="form-label">
+                    每公斤運費扣減 (<code>b_freight_per_kg</code>)
+                  </label>
+                  <input
+                    type="number"
+                    id="inputBFreightPerKg"
+                    class="form-control form-control-sm"
+                    min="0"
+                    step="0.01"
+                    value="0.0"
+                  />
+                </div>
+                <div class="col-12 col-sm-6">
+                  <label for="inputBDeductionPerTon" class="form-label">
+                    每濕噸固定扣減 (<code>b_deduction_per_ton</code>, /WMT)
+                  </label>
+                  <input
+                    type="number"
+                    id="inputBDeductionPerTon"
+                    class="form-control form-control-sm"
+                    min="0"
+                    step="1.0"
+                    value="0.0"
+                  />
+                </div>
+              </div>
+
+              <div class="small text-muted mb-2">
+                👇 可直接於下方表格修改各金屬品位區間（<code>min_grade &le; 品位 &lt; max_grade</code>）與對應折數（<code>payable_rate</code>，0.0 ~ 1.0），並可動態新增或刪除階梯列：
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-xl-6">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold">🟫 銅 Cu 濕基階梯折數表 (單位：%)</span>
+                      <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2" data-add-tier="Cu">
+                        <i class="bi bi-plus-lg"></i> 新增階梯
+                      </button>
+                    </div>
+                    <div id="tierEditorCu"></div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold">🟨 金 Au 濕基階梯折數表 (單位：g/T)</span>
+                      <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2" data-add-tier="Au">
+                        <i class="bi bi-plus-lg"></i> 新增階梯
+                      </button>
+                    </div>
+                    <div id="tierEditorAu"></div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold">⬜ 銀 Ag 濕基階梯折數表 (單位：g/T)</span>
+                      <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2" data-add-tier="Ag">
+                        <i class="bi bi-plus-lg"></i> 新增階梯
+                      </button>
+                    </div>
+                    <div id="tierEditorAg"></div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                  <div class="p-3 border rounded-3 bg-light bg-opacity-50">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold">🟦 鈀 Pd 濕基階梯折數表 (單位：g/T)</span>
+                      <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2" data-add-tier="Pd">
+                        <i class="bi bi-plus-lg"></i> 新增階梯
+                      </button>
+                    </div>
+                    <div id="tierEditorPd"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===========================================================
+                 Tab 5: 庫存明細表總覽 (106 批)
+                 =========================================================== -->
+            <div class="tab-pane fade" id="tab-inv-view" role="tabpanel">
+              <div class="row g-2 align-items-center justify-content-between mb-3">
+                <div class="col-12 col-md-5">
+                  <h6 class="fw-bold mb-0">
+                    📋 庫存明細表批次彙總檢視
+                    <span id="invOverviewCountBadge" class="badge bg-secondary ms-1">106 批</span>
+                  </h6>
+                </div>
+                <div class="col-7 col-md-4">
+                  <input
+                    type="search"
+                    id="invSearchInput"
+                    class="form-control form-control-sm"
+                    placeholder="🔍 搜尋批號、進料代號、料號、編碼、位置..."
+                  />
+                </div>
+                <div class="col-5 col-md-3">
+                  <select id="invAssayFilter" class="form-select form-select-sm">
+                    <option value="all">全部批次 (含未化驗)</option>
+                    <option value="assayed">僅顯示已化驗批次</option>
+                    <option value="unassayed">僅顯示未化驗批次</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="yy-table-container">
+                <table class="table table-hover table-bordered yy-table">
+                  <thead>
+                    <tr>
+                      <th class="sticky-col">批號</th>
+                      <th>廠別</th>
+                      <th>進料代號</th>
+                      <th>總表料號</th>
+                      <th>編碼料號</th>
+                      <th>存放位置</th>
+                      <th class="text-end">總包數</th>
+                      <th class="text-end">倉庫濕重(kg)</th>
+                      <th class="text-end">總乾重(kg)</th>
+                      <th class="text-end">含水率(%)</th>
+                      <th class="text-end">乾基Cu(%)</th>
+                      <th class="text-end">濕基Cu(%)</th>
+                      <th class="text-end">乾基Au(g/T)</th>
+                      <th class="text-end">溼基Au(g/T)</th>
+                      <th class="text-end">乾基Ag(g/T)</th>
+                      <th class="text-end">溼基Ag(g/T)</th>
+                      <th class="text-end">乾基Pd(g/T)</th>
+                      <th class="text-end">溼基Pd(g/T)</th>
+                      <th class="text-center">已化驗</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invOverviewTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             執行配滿櫃最佳化求解控制列
+             =============================================================== -->
+        <div class="yy-card p-3 mb-3">
+          <div class="row g-3 align-items-center">
+            <div class="col-12 col-md-5">
+              <button
+                type="button"
+                id="btnRunSolve"
+                class="btn btn-primary w-100 fw-bold py-2 shadow-sm"
+              >
+                🚀 立即執行「配滿櫃最佳化配櫃試算」
+              </button>
+            </div>
+            <div class="col-12 col-md-7">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="checkAutoRun"
+                  checked
+                />
+                <label class="form-check-label fw-semibold" for="checkAutoRun">
+                  當參數調整時自動即時重新試算 (毫秒級即時更新)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 參數驗證錯誤提示 -->
+        <div id="validationErrorAlert" class="alert alert-danger d-none mb-3"></div>
+
+        <!-- ===============================================================
+             配滿櫃最佳化試算結果呈現區
+             =============================================================== -->
+        <div id="resultSectionCard" class="yy-card p-3 mb-4">
+          <h5 id="resultHeaderTitle" class="fw-bold text-dark mb-3">
+            📊 配滿櫃最佳化試算結果
+          </h5>
+
+          <!-- 無法找到合規組合時之診斷警告 -->
+          <div id="infeasibleAlertBox" class="d-none"></div>
+
+          <!-- 找到合規組合時之完整儀表板 -->
+          <div id="feasibleResultContainer">
+            <!-- 1. 6 張響應式 KPI 頂部指標卡 -->
+            <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-3 mb-3">
+              <div class="col">
+                <div class="kpi-card">
+                  <div class="kpi-label">選中總包數</div>
+                  <div class="kpi-value" id="kpiBagCount">-</div>
+                  <span class="kpi-sub" id="kpiSplitCount">-</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="kpi-card">
+                  <div class="kpi-label">貨櫃總濕重 (WMT)</div>
+                  <div class="kpi-value" id="kpiWmtKg">-</div>
+                  <span class="kpi-sub" id="kpiWmtTon">-</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="kpi-card">
+                  <div class="kpi-label">貨櫃總乾重 (DMT)</div>
+                  <div class="kpi-value" id="kpiDmtKg">-</div>
+                  <span class="kpi-sub" id="kpiMoisturePct">-</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="kpi-card kpi-cu">
+                  <div class="kpi-label">加權濕基 Cu (%)</div>
+                  <div class="kpi-value" id="kpiWetCu">-</div>
+                  <span class="kpi-sub" id="kpiCuDiff">-</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="kpi-card kpi-profit">
+                  <div class="kpi-label" id="kpiNetProfitLabel">預估結算淨利</div>
+                  <div class="kpi-value text-success" id="kpiNetProfit">-</div>
+                  <span class="kpi-sub" id="kpiGrossRev">-</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="kpi-card kpi-score">
+                  <div class="kpi-label">綜合目標分數</div>
+                  <div class="kpi-value" id="kpiObjScore">-</div>
+                  <span class="kpi-sub" id="kpiElapsedMs">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 選中批次組合橫幅 -->
+            <div id="selectedBatchesBanner" class="alert alert-success py-2 px-3 small mb-3"></div>
+
+            <!-- 2. 匯出 Excel 與 JSON 按鈕列 -->
+            <div class="row g-2 mb-3">
+              <div class="col-12 col-sm-6 col-lg-4">
+                <button
+                  type="button"
+                  id="btnExportExcel"
+                  class="btn btn-success w-100 fw-bold"
+                >
+                  📥 一鍵匯出《配櫃結果明細表.xlsx》
+                </button>
+              </div>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <button
+                  type="button"
+                  id="btnExportScenarioJson"
+                  class="btn btn-outline-primary w-100 fw-semibold"
+                >
+                  📥 匯出本次配櫃參數設定 (.json)
+                </button>
+              </div>
+            </div>
+
+            <!-- 3. 詳細計價分解表、批次小計表、逐包明細表 (Result Sub-Tabs) -->
+            <ul class="nav nav-tabs yy-nav-tabs" id="resultTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="res-tab1-btn"
+                  data-bs-toggle="tab"
+                  data-bs-target="#res-tab1"
+                  type="button"
+                  role="tab"
+                >
+                  📦 (1) 選中批次規格與重量小計表
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="res-tab2-btn"
+                  data-bs-toggle="tab"
+                  data-bs-target="#res-tab2"
+                  type="button"
+                  role="tab"
+                >
+                  📑 (2) 選中太空包逐包規格與重量明細表
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="res-tab3-btn"
+                  data-bs-toggle="tab"
+                  data-bs-target="#res-tab3"
+                  type="button"
+                  role="tab"
+                >
+                  🧮 (3) 客戶計價公式與分項金額試算分解
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content pt-3" id="resultTabsContent">
+              <!-- Result Tab 1: 選中批次小計表 -->
+              <div class="tab-pane fade show active" id="res-tab1" role="tabpanel">
+                <div class="yy-table-container">
+                  <table class="table table-hover table-bordered yy-table">
+                    <thead>
+                      <tr>
+                        <th class="sticky-col">批號</th>
+                        <th>廠別</th>
+                        <th>進料代號</th>
+                        <th>總表料號</th>
+                        <th>編碼料號</th>
+                        <th>存放位置</th>
+                        <th class="text-center">出貨方式</th>
+                        <th class="text-center">選中包數/原批包數</th>
+                        <th class="text-end">選中包數</th>
+                        <th class="text-end">含水率(%)</th>
+                        <th class="text-end">乾基Cu(%)</th>
+                        <th class="text-end">濕基Cu(%)</th>
+                        <th class="text-end">乾基Au(g/T)</th>
+                        <th class="text-end">溼基Au(g/T)</th>
+                        <th class="text-end">乾基Ag(g/T)</th>
+                        <th class="text-end">溼基Ag(g/T)</th>
+                        <th class="text-end">乾基Pd(g/T)</th>
+                        <th class="text-end">溼基Pd(g/T)</th>
+                        <th class="text-end">現場重小計(kg)</th>
+                        <th class="text-end">倉庫濕重小計(kg)</th>
+                        <th class="text-end">乾重小計(kg)</th>
+                      </tr>
+                    </thead>
+                    <tbody id="resBatchSummaryTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Result Tab 2: 選中太空包逐包明細表 -->
+              <div class="tab-pane fade" id="res-tab2" role="tabpanel">
+                <div class="row g-2 align-items-center justify-content-between mb-2">
+                  <div class="col-12 col-sm-6 col-md-4">
+                    <input
+                      type="search"
+                      id="resBagSearchInput"
+                      class="form-control form-control-sm"
+                      placeholder="🔍 篩選單包代號、批號、進料代號..."
+                    />
+                  </div>
+                </div>
+                <div class="yy-table-container mb-2">
+                  <table class="table table-hover table-bordered yy-table">
+                    <thead>
+                      <tr>
+                        <th class="sticky-col">單包代號</th>
+                        <th>批號</th>
+                        <th>廠別</th>
+                        <th>進料代號</th>
+                        <th>總表料號</th>
+                        <th>編碼料號</th>
+                        <th>存放位置</th>
+                        <th class="text-end">現場重(kg)</th>
+                        <th class="text-end">倉庫濕重(kg)</th>
+                        <th class="text-end">單包乾重(kg)</th>
+                        <th class="text-end">含水率(%)</th>
+                        <th class="text-end">乾基Cu(%)</th>
+                        <th class="text-end">濕基Cu(%)</th>
+                        <th class="text-end">乾基Au(g/T)</th>
+                        <th class="text-end">溼基Au(g/T)</th>
+                        <th class="text-end">乾基Ag(g/T)</th>
+                        <th class="text-end">溼基Ag(g/T)</th>
+                        <th class="text-end">乾基Pd(g/T)</th>
+                        <th class="text-end">溼基Pd(g/T)</th>
+                      </tr>
+                    </thead>
+                    <tbody id="resBagDetailTableBody"></tbody>
+                  </table>
+                </div>
+                <div id="resBagDetailFooterSummary" class="alert alert-light border py-2 px-3 small mb-0"></div>
+              </div>
+
+              <!-- Result Tab 3: 客戶計價公式與分項金額試算分解 -->
+              <div class="tab-pane fade" id="res-tab3" role="tabpanel">
+                <div id="resPricingBreakdownContainer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       行動版底部常駐操作列 (< 992px 顯示)
+       ===================================================================== -->
+  <div class="mobile-sticky-bar d-lg-none d-flex align-items-center justify-content-between gap-2">
+    <div id="mobileStickySummary" class="small lh-sm">
+      <div><strong>配滿櫃最佳化試算</strong></div>
+      <div class="text-info">點擊右側按鈕立即重算</div>
+    </div>
+    <button type="button" id="btnMobileRunSolve" class="btn btn-primary btn-sm fw-bold px-3 py-2 flex-shrink-0">
+      🚀 立即試算
+    </button>
+  </div>
+
+  <!-- =====================================================================
+       JavaScript 依賴庫與核心模組
+       ===================================================================== -->
+  <!-- SheetJS (xlsx.full.min.js) 支援瀏覽器端直接讀取與匯出多工作表 .xlsx -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Bootstrap 5.3 Bundle JS -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <!-- 預設內嵌設定檔與《庫存明細表.xlsx》資料 -->
+  <script src="js/default_data.js"></script>
+  <!-- 設定檔驗證與載入模組 -->
+  <script src="js/config_loader.js"></script>
+  <!-- 自動配櫃與計價核心引擎 -->
+  <script src="js/blending_engine.js"></script>
+  <!-- 互動式 UI 控制器 -->
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+{
+  "_comment": "永源化工 — 自動配櫃系統 UI 參數設定檔 (採用配滿櫃模式，預設總重量介於 20T ~ 20.5T，即 20,000 ~ 20,500 kg)",
+  "inventory_excel_path": "../庫存明細表.xlsx",
+  "global_defaults": {
+    "fill_container": true,
+    "full_container_range": [20000.0, 20500.0],
+    "w_min_kg": 20000.0,
+    "w_max_kg": 20500.0,
+    "target_cu_range": [0.0, 100.0],
+    "max_in_container_diff_cu": 100.0,
+    "max_total_value": null,
+    "banned_codes": [],
+    "must_batch_ids": [],
+    "must_feed_codes": [],
+    "must_bag_ids": [],
+    "exclude_pm_codes": [],
+    "exclude_pm_materials": [],
+    "split_batch_penalty": 500.0,
+    "price_currency": "USD",
+    "troy_oz_to_g": 31.1035,
+    "metal_prices": {
+      "Cu": 9.5,
+      "Au": 2650.0,
+      "Ag": 31.0,
+      "Pd": 1050.0
+    },
+    "metal_prices_jpy": {
+      "Cu": 1501000.0,
+      "Au": 13462.0,
+      "Ag": 157.474,
+      "Pd": 5334.0
+    },
+    "a_mode": "with_pm",
+    "a_thresholds": {
+      "Cu": 3.0,
+      "Au": 1.0,
+      "Ag": 30.0,
+      "Pd": 5.0
+    },
+    "a_rc": {
+      "Cu": 0.5,
+      "Au": 5.0,
+      "Ag": 0.5,
+      "Pd": 5.0
+    },
+    "a_freight_per_dmt": 0.0,
+    "a_moisture_limit": 25.0,
+    "a_moisture_penalty_per_wmt": 0.0,
+    "a_cu_below_threshold_tc_per_wmt": 0.0,
+    "a_assay_fee_if_below": 0.0,
+    "b_freight_per_kg": 0.0,
+    "b_deduction_per_ton": 0.0,
+    "standard_tier_tables": {
+      "Cu": [
+        {"min_grade": 0.0, "max_grade": 8.0, "payable_rate": 0.50},
+        {"min_grade": 8.0, "max_grade": 13.0, "payable_rate": 0.65},
+        {"min_grade": 13.0, "max_grade": 20.0, "payable_rate": 0.75},
+        {"min_grade": 20.0, "max_grade": 100.0, "payable_rate": 0.85}
+      ],
+      "Au": [
+        {"min_grade": 0.0, "max_grade": 2.0, "payable_rate": 0.0},
+        {"min_grade": 2.0, "max_grade": 5.0, "payable_rate": 0.25},
+        {"min_grade": 5.0, "max_grade": 10000.0, "payable_rate": 0.35}
+      ],
+      "Ag": [
+        {"min_grade": 0.0, "max_grade": 50.0, "payable_rate": 0.0},
+        {"min_grade": 50.0, "max_grade": 100.0, "payable_rate": 0.30},
+        {"min_grade": 100.0, "max_grade": 1500.0, "payable_rate": 0.50},
+        {"min_grade": 1500.0, "max_grade": 100000.0, "payable_rate": 0.60}
+      ],
+      "Pd": [
+        {"min_grade": 0.0, "max_grade": 4.0, "payable_rate": 0.0},
+        {"min_grade": 4.0, "max_grade": 8.0, "payable_rate": 0.15},
+        {"min_grade": 8.0, "max_grade": 30.0, "payable_rate": 0.25},
+        {"min_grade": 30.0, "max_grade": 10000.0, "payable_rate": 0.35}
+      ]
+    }
+  },
+  "scenarios": {
+    "example_1_customer_E": {
+      "description": "【實務範例一：E 客戶配櫃 (配滿櫃 20T ~ 20.5T，USD 計價)】必出 X 料(Batch_10/1F1)、高貴金屬 Y 料(Batch_92/3P1) + 銅全批平均 >=5% + 貴金屬排除總表料號 X 平均",
+      "base_params": {
+        "customer_type": "E",
+        "price_currency": "USD",
+        "fill_container": true,
+        "full_container_range": [20000.0, 20500.0],
+        "target_cu_range": [5.0, 100.0],
+        "must_batch_ids": ["Batch_10", "Batch_92"],
+        "must_feed_codes": ["1F1", "3P1"],
+        "exclude_pm_codes": [],
+        "exclude_pm_materials": ["X"],
+        "split_batch_penalty": 500.0
+      },
+      "modes": [
+        {
+          "fill_container": true,
+          "mode_name": "配滿櫃模式 (fill_container=True，強制貨櫃總濕重落於 20,000 ~ 20,500 kg)"
+        }
+      ]
+    },
+    "example_2_customer_A": {
+      "description": "【實務範例二：A 客戶配櫃 (配滿櫃 20T ~ 20.5T，日圓 JPY 計價)】LOT 抽樣、乾基 DMT 門檻回收率計價與水分罰款計算 (Cu 1,501,000 ¥/T, Au 13,462 ¥/g, Ag 157.474 ¥/g, Pd 5,334 ¥/g)",
+      "base_params": {
+        "customer_type": "A",
+        "price_currency": "JPY",
+        "fill_container": true,
+        "full_container_range": [20000.0, 20500.0],
+        "metal_prices_jpy": {
+          "Cu": 1501000.0,
+          "Au": 13462.0,
+          "Ag": 157.474,
+          "Pd": 5334.0
+        },
+        "a_thresholds": {
+          "Cu": 3.0,
+          "Au": 1.0,
+          "Ag": 30.0,
+          "Pd": 5.0
+        },
+        "a_rc": {
+          "Cu": 0.5,
+          "Au": 5.0,
+          "Ag": 0.5,
+          "Pd": 5.0
+        },
+        "a_freight_per_dmt": 35.0,
+        "a_moisture_limit": 25.0,
+        "a_moisture_penalty_per_wmt": 15.0,
+        "split_batch_penalty": 500.0
+      },
+      "modes": [
+        {
+          "fill_container": true,
+          "mode_name": "配滿櫃模式 (fill_container=True，採用日圓 JPY 計價，強制貨櫃總濕重落於 20,000 ~ 20,500 kg)"
+        }
+      ]
+    },
+    "example_3_customer_B": {
+      "description": "【實務範例三：B 客戶配櫃 (配滿櫃 20T ~ 20.5T，USD 計價)】禁收編碼料號 B (X 料) + 同櫃最大含量落差 <= 7.0% + 階梯折數計價",
+      "base_params": {
+        "customer_type": "B",
+        "price_currency": "USD",
+        "fill_container": true,
+        "full_container_range": [20000.0, 20500.0],
+        "banned_codes": ["B"],
+        "max_in_container_diff_cu": 7.0,
+        "split_batch_penalty": 500.0
+      },
+      "modes": [
+        {
+          "fill_container": true,
+          "mode_name": "配滿櫃模式 (fill_container=True，禁收編碼 B，同櫃銅落差 <= 7.0%，總濕重落於 20,000 ~ 20,500 kg)"
+        }
+      ]
+    }
+  }
+}
